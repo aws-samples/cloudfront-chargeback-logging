@@ -4,6 +4,14 @@ exports.handler = async (event, context) => {
   const requestHeaders = event.Records[0].cf.request.headers;
   console.log(`Request Processed In: ${process.env.AWS_REGION}`);
 
+  const cloudFrontRequestId = event.Records[0].cf.config.requestId;
+  const lambdaRequestId = context.awsRequestId;
+  
+  console.log(JSON.stringify({
+      cloudFrontRequestId,
+      lambdaRequestId
+  }));
+
   let headerTable = '<table border="1" width="100%"><thead><tr><td><h1>Header</h1></td><td><h1>Value</h1></td></tr></thead><tbody>';
   for (const [key, value] of Object.entries(requestHeaders)) {
     headerTable += `<tr><td>${key}</td><td>${value[0].value}</td></tr>`;
@@ -29,16 +37,24 @@ exports.handler = async (event, context) => {
                     </body>
                 </html>`;
 
-  const response = {
+  return {
     status: '200',
     statusDescription: 'OK',
     headers: {
-      'cache-control': [{ key: 'Cache-Control', value: 'max-age=100' }],
-      'content-type': [{ key: 'Content-Type', value: 'text/html' }],
-      'content-encoding': [{ key: 'Content-Encoding', value: 'UTF-8' }]
+      'cache-control': [{
+        key: 'Cache-Control',
+        value: 'max-age=100'
+      }],
+      'content-type': [{
+        key: 'Content-Type',
+        value: 'text/html'
+      }],
+      'content-encoding': [{
+        key: 'Content-Encoding',
+        value: 'UTF-8'
+      }]
     },
-    body: content
+    bodyEncoding: 'text',
+    body: content.trim()
   };
-
-  return response;
 };

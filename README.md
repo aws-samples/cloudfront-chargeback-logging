@@ -10,7 +10,7 @@ Data visualizations may vary for each customer usecase, but some sample visualiz
 
 ## Solution Architecture
 
-This solution only focuses on the chargeback of Amazon CloudFront chargeback, seperated by the dotted line, but can easily be extended to include WAF and lambda at edge logs.
+This solution only focuses on the chargeback of Amazon CloudFront chargeback, seperated by the dotted line, but can easily be extended to include WAF and Lambda@Edge logs.
 
 ![CloudFront ChargeBack Logging Architecture](images/cloudfront-chargeback-logging-architecture-diagram.png)
 
@@ -80,6 +80,7 @@ do
 done
 ```
 
+An alternative method for distributed testing would be using the [Distributed Load Testing Solution from the AWS Solutions library](https://aws.amazon.com/solutions/implementations/distributed-load-testing-on-aws/).
 
 4. If this is the first-time using Athena in your AWS account, then you must setup 
 an Amazon S3 output bucket for query results. There is a banner to walk you through 

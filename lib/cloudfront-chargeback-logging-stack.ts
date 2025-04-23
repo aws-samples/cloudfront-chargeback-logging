@@ -171,7 +171,7 @@ export class CloudfrontChargeBackLoggingStack extends Stack {
         webAclId: chargeBackWACL.attrArn,
         defaultBehavior: {
           origin: spaOrigin,
-          allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
+          allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         },
         additionalBehaviors: {
@@ -199,7 +199,7 @@ export class CloudfrontChargeBackLoggingStack extends Stack {
     // Lambda for serving dynamic API content
     const chargeBackLambda = new lambda.Function(this, 'chargeback-regional-lambda', {
       functionName: 'chargeBackLambda',
-      code: lambda.Code.fromAsset(path.join('src/', 'lambda')),
+      code: lambda.Code.fromAsset(path.join('src/', 'api-gateway')),
       handler: 'businessone.handler',
       runtime: lambda.Runtime.NODEJS_LATEST,
       timeout: Duration.seconds(10),
@@ -251,7 +251,7 @@ export class CloudfrontChargeBackLoggingStack extends Stack {
     )});
 
     chargeBackdistribution.addBehavior('/EdgeFunc.html', spaOrigin, {
-      allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
+      allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
       viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       functionAssociations: [{
         function: chargeBackCloudFrontFunction,
